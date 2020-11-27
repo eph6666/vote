@@ -1,10 +1,10 @@
-FROM microsoft/dotnet:2.0.0-sdk
+FROM 111706684826.dkr.ecr.us-east-1.amazonaws.com/library//dotnet:2.0.0-sdk
 
 WORKDIR /code
 
 ADD src/Worker /code/src/Worker
 
 RUN dotnet restore -v minimal src/Worker \
-    && dotnet publish -c Release -o "./" "src/Worker/" 
+    && dotnet publish -c Release -o "./" "src/Worker/"
 
 CMD dotnet src/Worker/Worker.dll

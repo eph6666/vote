@@ -1,4 +1,4 @@
-FROM node:8.9-alpine
+FROM 111706684826.dkr.ecr.us-east-1.amazonaws.com/library/node:8.9-alpine
 
 RUN mkdir -p /app
 WORKDIR /app

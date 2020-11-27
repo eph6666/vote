@@ -1,5 +1,5 @@
 # Using official python runtime base image
-FROM python:2.7-alpine
+FROM 111706684826.dkr.ecr.us-east-1.amazonaws.com/library/python:2.7-alpine
 
 # Set the application directory
 WORKDIR /app
