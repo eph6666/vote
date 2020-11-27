@@ -12,11 +12,11 @@ spec:
   rules:
   - http:
       paths:
-      - path: /vote
+      - path: /
         backend:
           serviceName: vote
           servicePort: 5000
-      - path: /static
+      - path: /static/*
         backend:
           serviceName: vote
           servicePort: 5000
@@ -24,7 +24,7 @@ spec:
         backend:
           serviceName: result
           servicePort: 5001
-      - path: /stylesheets
+      - path: /stylesheets/*
         backend:
           serviceName: result
           servicePort: 5001
