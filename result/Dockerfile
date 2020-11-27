@@ -3,8 +3,10 @@ FROM 111706684826.dkr.ecr.us-east-1.amazonaws.com/library/node:8.10.0-alpine
 RUN mkdir -p /app
 WORKDIR /app
 
-RUN npm install -g nodemon
+RUN npm config set unsafe-perm true
+RUN yarn install --production --no-progress
 RUN npm config set registry https://registry.npmjs.org
+RUN npm install -g nodemon
 COPY package.json /app/package.json
 RUN npm install \
  && npm ls \
