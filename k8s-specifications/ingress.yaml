@@ -14,9 +14,9 @@ spec:
       paths:
       - path: /vote
         backend:
-          serviceName: result
+          serviceName: vote
           servicePort: 5000
       - path: /result
         backend:
-          serviceName: vote
+          serviceName: result
           servicePort: 5001
