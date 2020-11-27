@@ -1,0 +1,40 @@
+---
+version: 0.2
+phases:
+  install:
+    commands:
+      - curl -sS -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - export PATH=$PWD/:$PATH
+      - apt-get update && apt-get -y install jq python3-pip python3-dev && pip3 install --upgrade awscli
+  pre_build:
+      commands:
+        - TAG="$CODEBUILD_RESOLVED_SOURCE_VERSION"
+        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/vote:$TAG"'@' ./k8s-specifications/vote-deployment.yaml
+        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/result:$TAG"'@' ./k8s-specifications/result-deployment.yaml
+        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/worker:$TAG"'@' ./k8s-specifications/worker-deployment.yaml
+        - $(aws ecr get-login --no-include-email)
+        - export KUBECONFIG=$HOME/.kube/config
+  build:
+    commands:
+      - docker build --tag $REPOSITORY_URI/result:$TAG ./result
+      - docker build --tag $REPOSITORY_URI/worker:$TAG ./vote
+      - docker build --tag $REPOSITORY_URI/vote:$TAG ./worker
+
+  post_build:
+    commands:
+      - docker push $REPOSITORY_URI/result:$TAG
+      - docker push $REPOSITORY_URI/vote:$TAG
+      - docker push $REPOSITORY_URI/worker:$TAG
+      - CREDENTIALS=$(aws sts assume-role --role-arn $EKS_KUBECTL_ROLE_ARN --role-session-name codebuild-kubectl --duration-seconds 900)
+      - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
+      - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
+      - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
+      - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
+      - kubectl apply -f ./k8s-specifications/
+      - printf '[{"name":"demo/result","imageUri":"%s"}]' $REPOSITORY_URI/result:$TAG > build.json
+      - printf '[{"name":"demo/vote","imageUri":"%s"}]' $REPOSITORY_URI/vote:$TAG > build.json
+      - printf '[{"name":"demo/worker","imageUri":"%s"}]' $REPOSITORY_URI/worker:$TAG > build.json
+artifacts:
+  files: build.json
