@@ -18,8 +18,8 @@ phases:
   build:
     commands:
       - docker build --tag $REPOSITORY_URI/result:$TAG ./result
-      - docker build --tag $REPOSITORY_URI/worker:$TAG ./vote
-      - docker build --tag $REPOSITORY_URI/vote:$TAG ./worker
+      - docker build --tag $REPOSITORY_URI/vote:$TAG ./vote
+      - docker build --tag $REPOSITORY_URI/worker:$TAG ./worker
 
   post_build:
     commands:
