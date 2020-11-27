@@ -32,6 +32,10 @@ spec:
         backend:
           serviceName: result
           servicePort: 5001
+      - path: /socket.io/*
+        backend:
+          serviceName: result
+          servicePort: 5001
       - path: /app.js
         backend:
           serviceName: result
