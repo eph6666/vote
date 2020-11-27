@@ -4,6 +4,9 @@ metadata:
   name: vote
   namespace: vote
 spec:
+  selector:
+    matchLabels:
+      app: vote
   replicas: 1
   template:
     metadata:

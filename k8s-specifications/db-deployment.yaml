@@ -4,6 +4,9 @@ metadata:
   name: db
   namespace: vote
 spec:
+  selector:
+    matchLabels:
+      app: db
   replicas: 1
   template:
     metadata:
