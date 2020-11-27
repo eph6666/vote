@@ -1,4 +1,4 @@
-FROM 111706684826.dkr.ecr.us-east-1.amazonaws.com/library//dotnet:2.0.0-sdk
+FROM 111706684826.dkr.ecr.us-east-1.amazonaws.com/library/dotnet:2.0.0-sdk
 
 WORKDIR /code
 
