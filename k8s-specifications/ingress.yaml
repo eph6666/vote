@@ -16,7 +16,23 @@ spec:
         backend:
           serviceName: vote
           servicePort: 5000
+      - path: /static
+        backend:
+          serviceName: vote
+          servicePort: 5000
       - path: /result
+        backend:
+          serviceName: result
+          servicePort: 5001
+      - path: /stylesheets
+        backend:
+          serviceName: result
+          servicePort: 5001
+      - path: /socket.io.js
+        backend:
+          serviceName: result
+          servicePort: 5001
+      - path: /app.js
         backend:
           serviceName: result
           servicePort: 5001
