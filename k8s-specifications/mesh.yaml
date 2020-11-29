@@ -1,12 +1,4 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: vote
-  labels:
-    mesh: voting-app
-    appmesh.k8s.aws/sidecarInjectorWebhook: enabled
----
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: Mesh
 metadata:
@@ -37,6 +29,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 5000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: vote
   serviceDiscovery:
     dns:
       hostname: vote-v1.vote.svc.cluster.local
