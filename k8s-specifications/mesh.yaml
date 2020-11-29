@@ -1,0 +1,209 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vote
+  labels:
+    mesh: voting-app
+    appmesh.k8s.aws/sidecarInjectorWebhook: enabled
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: Mesh
+metadata:
+  name: voting-app
+spec:
+  namespaceSelector:
+    matchLabels:
+      mesh: voting-app
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: vote-v1
+  namespace: vote
+spec:
+  podSelector:
+    matchLabels:
+      app: vote
+  listeners:
+    - portMapping:
+        port: 5000
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: redis
+  serviceDiscovery:
+    dns:
+      hostname: vote.vote.svc.cluster.local
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualNode
+# metadata:
+#   name: redis
+#   namespace: vote
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app: redis
+#   listeners:
+#     - portMapping:
+#         port: 6479
+#         protocol: tcp
+#       healthCheck:
+#         protocol: tcp
+#         path: '/'
+#         healthyThreshold: 2
+#         unhealthyThreshold: 2
+#         timeoutMillis: 2000
+#         intervalMillis: 5000
+#   serviceDiscovery:
+#     dns:
+#       hostname: redis.vote.svc.cluster.local
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualNode
+# metadata:
+#   name: worker
+#   namespace: vote
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app: worker
+#   backends:
+#     - virtualService:
+#         virtualServiceRef:
+#           name: redis
+#     - virtualService:
+#         virtualServiceRef:
+#           name: db
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualNode
+# metadata:
+#   name: db
+#   namespace: vote
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app: db
+#   listeners:
+#     - portMapping:
+#         port: 5432
+#         protocol: tcp
+#       healthCheck:
+#         protocol: tcp
+#         path: '/'
+#         healthyThreshold: 2
+#         unhealthyThreshold: 2
+#         timeoutMillis: 2000
+#         intervalMillis: 5000
+#   serviceDiscovery:
+#     dns:
+#       hostname: db.vote.svc.cluster.local
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualNode
+# metadata:
+#   name: result
+#   namespace: vote
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app: redis
+#   listeners:
+#     - portMapping:
+#         port: 5001
+#         protocol: http
+#       healthCheck:
+#         protocol: http
+#         path: '/result'
+#         healthyThreshold: 2
+#         unhealthyThreshold: 2
+#         timeoutMillis: 2000
+#         intervalMillis: 5000
+#   serviceDiscovery:
+#     dns:
+#       hostname: result.vote.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: vote-router
+  namespace: vote
+spec:
+  listeners:
+    - portMapping:
+        port: 5000
+        protocol: http
+  routes:
+    - name: vote-route
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: vote-v1
+              weight: 100
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualRouter
+# metadata:
+#   name: redis-router
+#   namespace: vote
+# spec:
+#   listeners:
+#     - portMapping:
+#         port: 6379
+#         protocol: tcp
+#   routes:
+#     - name: redis-route
+#       httpRoute:
+#         match:
+#           prefix: /
+#         action:
+#           weightedTargets:
+#             - virtualNodeRef:
+#                 name: redis
+#               weight: 100
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualRouter
+# metadata:
+#   name: db-router
+#   namespace: vote
+# spec:
+#   listeners:
+#     - portMapping:
+#         port: 5432
+#         protocol: tcp
+#   routes:
+#     - name: db-route
+#       httpRoute:
+#         match:
+#           prefix: /
+#         action:
+#           weightedTargets:
+#             - virtualNodeRef:
+#                 name: db
+#               weight: 100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote
+  namespace: vote
+  labels:
+    app: vote
+spec:
+  ports:
+  - port: 5000
+    name: http

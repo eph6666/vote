@@ -40,3 +40,7 @@ spec:
         backend:
           serviceName: result
           servicePort: 5001
+      - path: /version
+        backend:
+          serviceName: vote
+          servicePort: 5000
