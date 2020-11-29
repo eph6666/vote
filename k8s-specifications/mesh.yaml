@@ -35,7 +35,7 @@ spec:
           name: vote
   serviceDiscovery:
     dns:
-      hostname: vote-v1.vote.svc.cluster.local
+      hostname: vote.vote.svc.cluster.local
 ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
