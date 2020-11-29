@@ -5,3 +5,4 @@ metadata:
   labels:
     mesh: voting-app
     appmesh.k8s.aws/sidecarInjectorWebhook: enabled
+    gateway: vote-gw

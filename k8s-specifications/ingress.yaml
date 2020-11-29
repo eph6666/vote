@@ -14,11 +14,11 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: vote
+          serviceName: vote-gw
           servicePort: 5000
       - path: /static/*
         backend:
-          serviceName: vote
+          serviceName: vote-gw
           servicePort: 5000
       - path: /result
         backend:
@@ -42,5 +42,5 @@ spec:
           servicePort: 5001
       - path: /version
         backend:
-          serviceName: vote
+          serviceName: vote-gw
           servicePort: 5000

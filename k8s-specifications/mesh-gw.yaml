@@ -1,0 +1,66 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualGateway
+metadata:
+  name: vote-gw
+  namespace: vote
+spec:
+  namespaceSelector:
+    matchLabels:
+      gateway: vote-gw
+  podSelector:
+    matchLabels:
+      app: vote-gw
+  listeners:
+    - portMapping:
+        port: 8443
+        protocol: http
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: gateway-route
+  namespace: vote
+spec:
+  httpRoute:
+    match:
+      prefix: "/"
+    action:
+      target:
+        virtualService:
+          virtualServiceRef:
+            name: vote
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-gw
+  namespace: vote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vote-gw
+  template:
+    metadata:
+      labels:
+        app: vote-gw
+    spec:
+      containers:
+        - name: envoy
+          image: 840364872350.dkr.ecr.us-east-1.amazonaws.com/aws-appmesh-envoy:v1.15.1.0-prod
+          ports:
+            - containerPort: 8443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote-gw
+  namespace: vote
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+      targetPort: 8443
+      name: https
+  selector:
+    app: vote-gw
