@@ -6,16 +6,18 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: vote-v1
+      app: vote
+      version: v1
   replicas: 1
   template:
     metadata:
       labels:
-        app: vote-v1
+        app: vote
+        version: v1
     spec:
       containers:
       - image: CONTAINER_IMAGE
-        name: vote-v1
+        name: vote
 ---
 apiVersion: v1
 kind: Service
@@ -30,5 +32,6 @@ spec:
     targetPort: 80
     nodePort: 31000
   selector:
-    app: vote-v1
+    app: vote
+    version: v1
 
