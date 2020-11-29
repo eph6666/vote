@@ -36,13 +36,21 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 5000
-  backends:
-    - virtualService:
-        virtualServiceRef:
-          name: redis
   serviceDiscovery:
     dns:
       hostname: vote.vote.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: vote
+  namespace: vote
+spec:
+  awsName: vote.vote.svc.cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: vote-router
 # ---
 # apiVersion: appmesh.k8s.aws/v1beta2
 # kind: VirtualNode
