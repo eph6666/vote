@@ -26,7 +26,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis
+  name: redis-v1
   namespace: vote
 spec:
   type: ClusterIP
