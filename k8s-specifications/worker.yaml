@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: vote
+spec:
+  selector:
+    matchLabels:
+      app: worker
+      version: v1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: worker
+        version: v1
+    spec:
+      containers:
+      - image: CONTAINER_IMAGE
+        name: worker
+---
+# Vote mesh
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: worker-v1
+  namespace: vote
+spec:
+  podSelector:
+    matchLabels:
+      app: worker
+      version: v1
+  listeners:
+    - portMapping:
+        port: 5001
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/version'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: db
+    - virtualService:
+        virtualServiceRef:
+          name: redis
