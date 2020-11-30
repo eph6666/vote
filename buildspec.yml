@@ -10,9 +10,9 @@ phases:
   pre_build:
       commands:
         - TAG="$CODEBUILD_RESOLVED_SOURCE_VERSION"
-        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/vote:$TAG"'@' ./k8s-specifications/vote-deployment.yaml
-        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/result:$TAG"'@' ./k8s-specifications/result-deployment.yaml
-        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/worker:$TAG"'@' ./k8s-specifications/worker-deployment.yaml
+        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/vote:$TAG"'@' ./k8s-specifications/vote.yaml
+        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/result:$TAG"'@' ./k8s-specifications/result.yaml
+        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI/worker:$TAG"'@' ./k8s-specifications/worker.yaml
         - $(aws ecr get-login --no-include-email)
         - export KUBECONFIG=$HOME/.kube/config
   build:

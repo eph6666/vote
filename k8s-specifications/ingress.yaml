@@ -22,23 +22,23 @@ spec:
           servicePort: 5000
       - path: /result
         backend:
-          serviceName: result
+          serviceName: result-gw
           servicePort: 5001
       - path: /stylesheets/*
         backend:
-          serviceName: result
+          serviceName: result-gw
           servicePort: 5001
       - path: /socket.io.js
         backend:
-          serviceName: result
+          serviceName: result-gw
           servicePort: 5001
       - path: /socket.io/*
         backend:
-          serviceName: result
+          serviceName: result-gw
           servicePort: 5001
       - path: /app.js
         backend:
-          serviceName: result
+          serviceName: result-gw
           servicePort: 5001
       - path: /version
         backend:
