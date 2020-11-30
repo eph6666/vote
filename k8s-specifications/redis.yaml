@@ -50,13 +50,13 @@ spec:
     - portMapping:
         port: 6379
         protocol: tcp
-      healthCheck:
-        protocol: tcp
-        path: '/'
-        healthyThreshold: 2
-        unhealthyThreshold: 2
-        timeoutMillis: 2000
-        intervalMillis: 5000
+      # healthCheck:
+      #   protocol: tcp
+      #   path: '/'
+      #   healthyThreshold: 2
+      #   unhealthyThreshold: 2
+      #   timeoutMillis: 2000
+      #   intervalMillis: 5000
   serviceDiscovery:
     dns:
       hostname: redis.vote.svc.cluster.local
