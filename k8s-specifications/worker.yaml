@@ -17,6 +17,7 @@ spec:
     spec:
       containers:
       - image: CONTAINER_IMAGE
+      # - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/worker:dbe52df13516ab398d212f8edb1d6bb2e35f7109
         name: worker
 ---
 # Vote mesh
@@ -32,15 +33,8 @@ spec:
       version: v1
   listeners:
     - portMapping:
-        port: 5001
+        port: 9080
         protocol: http
-      healthCheck:
-        protocol: http
-        path: '/version'
-        healthyThreshold: 2
-        unhealthyThreshold: 2
-        timeoutMillis: 2000
-        intervalMillis: 5000
   backends:
     - virtualService:
         virtualServiceRef:
@@ -48,3 +42,6 @@ spec:
     - virtualService:
         virtualServiceRef:
           name: redis
+  serviceDiscovery:
+    dns:
+      hostname: worker.vote.svc.cluster.local

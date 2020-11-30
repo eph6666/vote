@@ -17,6 +17,7 @@ spec:
     spec:
       containers:
       - image: CONTAINER_IMAGE
+      # - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/result:dbe52df13516ab398d212f8edb1d6bb2e35f7109
         name: result
 ---
 apiVersion: v1
@@ -30,7 +31,6 @@ spec:
   - name: "result-service"
     port: 5001
     targetPort: 80
-    nodePort: 31001
   selector:
     app: result
     version: v1
