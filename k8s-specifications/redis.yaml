@@ -7,13 +7,11 @@ spec:
   selector:
     matchLabels:
       app: redis
-      version: v1
   replicas: 1
   template:
     metadata:
       labels:
         app: redis
-        version: v1
     spec:
       containers:
       - image: redis:alpine
@@ -25,7 +23,6 @@ spec:
       - name: redis-data
         emptyDir: {}
 ---
-apiVersion: v1
 kind: Service
 metadata:
   name: redis
@@ -37,7 +34,6 @@ spec:
     targetPort: 6379
   selector:
     app: redis
-    version: v1
 ---
 # Redis
 apiVersion: appmesh.k8s.aws/v1beta2
@@ -49,7 +45,6 @@ spec:
   podSelector:
     matchLabels:
       app: redis
-      version: v1
   listeners:
     - portMapping:
         port: 6379
@@ -98,7 +93,6 @@ spec:
                 name: redis-v1
               weight: 100
 ---
-apiVersion: v1
 kind: Service
 metadata:
   name: redis
