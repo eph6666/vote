@@ -1,3 +1,4 @@
+# vote
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualGateway
 metadata:
@@ -15,7 +16,6 @@ spec:
         port: 8443
         protocol: http
 ---
-# vote
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: GatewayRoute
 metadata:
@@ -67,23 +67,23 @@ spec:
     app: vote-gw
 ---
 # result
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualGateway
-metadata:
-  name: result-gw
-  namespace: vote
-spec:
-  namespaceSelector:
-    matchLabels:
-      gateway: result-gw
-  podSelector:
-    matchLabels:
-      app: result-gw
-  listeners:
-    - portMapping:
-        port: 8443
-        protocol: http
----
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: VirtualGateway
+# metadata:
+#   name: result-gw
+#   namespace: vote
+# spec:
+#   namespaceSelector:
+#     matchLabels:
+#       gateway: result-gw
+#   podSelector:
+#     matchLabels:
+#       app: result-gw
+#   listeners:
+#     - portMapping:
+#         port: 8443
+#         protocol: http
+# ---
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: GatewayRoute
 metadata:

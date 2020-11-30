@@ -58,7 +58,7 @@ spec:
         port: 5432
         protocol: tcp
       healthCheck:
-        protocol: tco
+        protocol: tcp
         path: '/'
         healthyThreshold: 2
         unhealthyThreshold: 2
