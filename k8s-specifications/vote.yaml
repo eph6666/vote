@@ -16,8 +16,8 @@ spec:
         version: v1
     spec:
       containers:
-      - image: CONTAINER_IMAGE
-      # - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/vote:dbe52df13516ab398d212f8edb1d6bb2e35f7109
+      # - image: CONTAINER_IMAGE
+      - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/vote:738886c588d7967fde9d91a04e1d0dcb0deac01a
         name: vote
 ---
 apiVersion: v1
