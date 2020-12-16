@@ -16,8 +16,8 @@ spec:
         version: v1
     spec:
       containers:
-      # - image: CONTAINER_IMAGE
-      - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/result:738886c588d7967fde9d91a04e1d0dcb0deac01a
+      - image: CONTAINER_IMAGE
+      # - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/result:c5c574a326911170996724cae3c91d7a4d492e0a
         name: result
 ---
 apiVersion: v1

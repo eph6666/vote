@@ -12,13 +12,13 @@ spec:
     - portMapping:
         port: 80
         protocol: http
-      # healthCheck:
-      #   protocol: http
-      #   path: '/result'
-      #   healthyThreshold: 2
-      #   unhealthyThreshold: 2
-      #   timeoutMillis: 2000
-      #   intervalMillis: 5000
+      healthCheck:
+        protocol: http
+        path: '/'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
   backends:
     - virtualService:
         virtualServiceRef:
@@ -53,7 +53,7 @@ spec:
     - name: result-route
       httpRoute:
         match:
-          prefix: /result
+          prefix: /
         action:
           weightedTargets:
             - virtualNodeRef:

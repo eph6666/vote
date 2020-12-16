@@ -81,3 +81,63 @@ spec:
         virtualService:
           virtualServiceRef:
             name: result
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: GatewayRoute
+# metadata:
+#   name: stylesheets-gateway-route
+#   namespace: vote
+# spec:
+#   httpRoute:
+#     match:
+#       prefix: "/stylesheets/style.css"
+#     action:
+#       target:
+#         virtualService:
+#           virtualServiceRef:
+#             name: result
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: GatewayRoute
+# metadata:
+#   name: js-gateway-route
+#   namespace: vote
+# spec:
+#   httpRoute:
+#     match:
+#       prefix: "/app.js"
+#     action:
+#       target:
+#         virtualService:
+#           virtualServiceRef:
+#             name: result
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: GatewayRoute
+# metadata:
+#   name: socket-gateway-route
+#   namespace: vote
+# spec:
+#   httpRoute:
+#     match:
+#       prefix: "/socket.io.js"
+#     action:
+#       target:
+#         virtualService:
+#           virtualServiceRef:
+#             name: result
+# ---
+# apiVersion: appmesh.k8s.aws/v1beta2
+# kind: GatewayRoute
+# metadata:
+#   name: favicon-gateway-route
+#   namespace: vote
+# spec:
+#   httpRoute:
+#     match:
+#       prefix: "/favicon.ico"
+#     action:
+#       target:
+#         virtualService:
+#           virtualServiceRef:
+#             name: result

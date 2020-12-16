@@ -11,6 +11,8 @@ spec:
   replicas: 1
   template:
     metadata:
+      annotations:
+        appmesh.k8s.aws/sidecarInjectorWebhook: enabled
       labels:
         app: db
         version: v1

@@ -1,4 +1,3 @@
-# DB
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
@@ -19,7 +18,10 @@ spec:
         unhealthyThreshold: 2
         timeoutMillis: 2000
         intervalMillis: 5000
-
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: db
   serviceDiscovery:
     dns:
       hostname: db-v1.vote.svc.cluster.local
@@ -45,12 +47,10 @@ spec:
   listeners:
     - portMapping:
         port: 5432
-        protocol: http
+        protocol: tcp
   routes:
-    - name: vote-route
+    - name: db-route
       tcpRoute:
-        match:
-          prefix: /
         action:
           weightedTargets:
             - virtualNodeRef:
