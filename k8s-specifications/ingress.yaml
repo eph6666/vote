@@ -1,46 +1,18 @@
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#   name: vote
-#   namespace: vote
-#   annotations:
-#     kubernetes.io/ingress.class: alb
-#     alb.ingress.kubernetes.io/scheme: internet-facing
-#     alb.ingress.kubernetes.io/target-type: ip
-#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-# spec:
-#   rules:
-#   - http:
-#       paths:
-#       - path: /
-#         backend:
-#           serviceName: vote-gw
-#           servicePort: 5000
-#       - path: /static/*
-#         backend:
-#           serviceName: vote-gw
-#           servicePort: 5000
-#       - path: /result
-#         backend:
-#           serviceName: result-gw
-#           servicePort: 5001
-#       - path: /stylesheets/*
-#         backend:
-#           serviceName: result-gw
-#           servicePort: 5001
-#       - path: /socket.io.js
-#         backend:
-#           serviceName: result-gw
-#           servicePort: 5001
-#       - path: /socket.io/*
-#         backend:
-#           serviceName: result-gw
-#           servicePort: 5001
-#       - path: /app.js
-#         backend:
-#           serviceName: result-gw
-#           servicePort: 5001
-#       - path: /version
-#         backend:
-#           serviceName: vote-gw
-#           servicePort: 5000
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vote
+  namespace: vote
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: vote-gw
+          servicePort: 80

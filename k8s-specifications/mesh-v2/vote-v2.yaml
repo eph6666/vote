@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-v2
+  namespace: vote
+  annotations:
+    appmesh.k8s.aws/virtualNode: "vote-v2_vote"
+spec:
+  selector:
+    matchLabels:
+      app: vote
+      version: v2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vote
+        version: v2
+    spec:
+      containers:
+      - image: CONTAINER_IMAGE
+      # - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/vote:738886c588d7967fde9d91a04e1d0dcb0deac01a
+        name: vote
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote-v2
+  namespace: vote
+spec:
+  type: ClusterIP
+  ports:
+  - name: "vote-service"
+    port: 80
+    targetPort: 80
+  selector:
+    app: vote
+    version: v2

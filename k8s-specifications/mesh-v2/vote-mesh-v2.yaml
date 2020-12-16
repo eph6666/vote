@@ -1,0 +1,55 @@
+---
+# Vote mesh
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: vote-v2
+  namespace: vote
+spec:
+  podSelector:
+    matchLabels:
+      app: vote
+      version: v2
+  listeners:
+    - portMapping:
+        port: 80
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/version'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: redis
+  serviceDiscovery:
+    dns:
+      hostname: vote-v2.vote.svc.cluster.local
+
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: vote-router
+  namespace: vote
+spec:
+  listeners:
+    - portMapping:
+        port: 80
+        protocol: http
+  routes:
+    - name: vote-route
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: vote-v1
+              weight: 75
+            - virtualNodeRef:
+                name: vote-v2
+              weight: 25
