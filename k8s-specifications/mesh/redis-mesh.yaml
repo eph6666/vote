@@ -1,0 +1,70 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: redis
+  namespace: vote
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+      version: v1
+  listeners:
+    - portMapping:
+        port: 6379
+        protocol: tcp
+      healthCheck:
+        protocol: tcp
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: redis
+  serviceDiscovery:
+    dns:
+      hostname: redis-v1.vote.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: redis
+  namespace: vote
+spec:
+  awsName: redis.vote.svc.cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: redis-router
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: redis-router
+  namespace: vote
+spec:
+  listeners:
+    - portMapping:
+        port: 6379
+        protocol: tcp
+  routes:
+    - name: redis-route
+      tcpRoute:
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: redis
+              weight: 100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: vote
+  labels:
+    app: redis
+spec:
+  ports:
+  - port: 6379
+    name: tcp

@@ -19,29 +19,3 @@ spec:
       # - image: CONTAINER_IMAGE
       - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/demo/worker:738886c588d7967fde9d91a04e1d0dcb0deac01a
         name: worker
----
-# Vote mesh
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: VirtualNode
-metadata:
-  name: worker-v1
-  namespace: vote
-spec:
-  podSelector:
-    matchLabels:
-      app: worker
-      version: v1
-  listeners:
-    - portMapping:
-        port: 9080
-        protocol: http
-  backends:
-    - virtualService:
-        virtualServiceRef:
-          name: db
-    - virtualService:
-        virtualServiceRef:
-          name: redis
-  serviceDiscovery:
-    dns:
-      hostname: worker.vote.svc.cluster.local

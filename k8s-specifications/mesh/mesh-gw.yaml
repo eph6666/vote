@@ -81,18 +81,3 @@ spec:
         virtualService:
           virtualServiceRef:
             name: result
----
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: GatewayRoute
-metadata:
-  name: vote-version-gateway-route
-  namespace: vote
-spec:
-  httpRoute:
-    match:
-      prefix: "/version"
-    action:
-      target:
-        virtualService:
-          virtualServiceRef:
-            name: vote

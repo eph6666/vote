@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug
+  namespace: vote
+spec:
+  selector:
+    matchLabels:
+      app: debug
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: debug
+    spec:
+      containers:
+      - image: 111706684826.dkr.ecr.us-east-1.amazonaws.com/library/debug:latest
+        name: debug
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
+---
+# Vote mesh
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: debug
+  namespace: vote
+spec:
+  podSelector:
+    matchLabels:
+      app: debug
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: http
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: vote
+    - virtualService:
+        virtualServiceRef:
+          name: redis
+    - virtualService:
+        virtualServiceRef:
+          name: db
+    - virtualService:
+        virtualServiceRef:
+          name: result
+  serviceDiscovery:
+    dns:
+      hostname: debug.vote.svc.cluster.local

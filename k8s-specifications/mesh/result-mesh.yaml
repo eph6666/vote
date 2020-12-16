@@ -1,0 +1,73 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: result-v1
+  namespace: vote
+spec:
+  podSelector:
+    matchLabels:
+      app: result
+      version: v1
+  listeners:
+    - portMapping:
+        port: 80
+        protocol: http
+      # healthCheck:
+      #   protocol: http
+      #   path: '/result'
+      #   healthyThreshold: 2
+      #   unhealthyThreshold: 2
+      #   timeoutMillis: 2000
+      #   intervalMillis: 5000
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: db
+  serviceDiscovery:
+    dns:
+      hostname: result-v1.vote.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: result
+  namespace: vote
+spec:
+  awsName: result.vote.svc.cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: result-router
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: result-router
+  namespace: vote
+spec:
+  listeners:
+    - portMapping:
+        port: 80
+        protocol: http
+  routes:
+    - name: result-route
+      httpRoute:
+        match:
+          prefix: /result
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                name: result-v1
+              weight: 100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: result
+  namespace: vote
+  labels:
+    app: result
+spec:
+  ports:
+  - port: 80
+    name: http

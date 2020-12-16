@@ -1,0 +1,26 @@
+---
+# Vote mesh
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: worker-v1
+  namespace: vote
+spec:
+  podSelector:
+    matchLabels:
+      app: worker
+      version: v1
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: redis
+    - virtualService:
+        virtualServiceRef:
+          name: db
+  serviceDiscovery:
+    dns:
+      hostname: worker-v1.vote.svc.cluster.local
