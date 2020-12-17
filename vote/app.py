@@ -6,7 +6,7 @@ import random
 import json
 
 option_a = os.getenv('OPTION_A', "Cats")
-option_b = os.getenv('OPTION_B', "Dogs")
+option_b = os.getenv('OPTION_B', "Apples")
 hostname = socket.gethostname()
 
 app = Flask(__name__)
@@ -42,7 +42,7 @@ def hello():
 
 @app.route("/version", methods=['GET'])
 def version():
-    return "Version: 2.0"
+    return "Version: 3.0"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)

@@ -28,15 +28,38 @@ spec:
       app: vote-gw
   template:
     metadata:
+      annotations:
+        appmesh.k8s.aws/sidecarInjectorWebhook: disabled
       labels:
         type: gateway
         app: vote-gw
     spec:
       containers:
-        - name: envoy
-          image: 840364872350.dkr.ecr.us-east-1.amazonaws.com/aws-appmesh-envoy:v1.15.1.0-prod
+        - env:
+          - name: APPMESH_PREVIEW
+            value: "0"
+          - name: ENVOY_LOG_LEVEL
+            value: info
+          - name: ENVOY_ADMIN_ACCESS_PORT
+            value: "9901"
+          - name: ENVOY_ADMIN_ACCESS_LOG_FILE
+            value: /tmp/envoy_admin_access.log
+          - name: AWS_REGION
+            value: us-east-1
+          - name: APPMESH_VIRTUAL_NODE_NAME
+            value: mesh/voting-app/virtualGateway/vote-gw_vote
+          image: 840364872350.dkr.ecr.us-west-1.amazonaws.com/aws-appmesh-envoy:v1.15.1.0-prod
+          imagePullPolicy: IfNotPresent
+          name: envoy
           ports:
-            - containerPort: 8443
+          - containerPort: 8443
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - curl -s http://localhost:9901/server_info | grep state | grep -q LIVE
 ---
 apiVersion: v1
 kind: Service
@@ -44,7 +67,7 @@ metadata:
   name: vote-gw
   namespace: vote
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 80
       targetPort: 8443
