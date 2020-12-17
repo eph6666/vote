@@ -42,7 +42,7 @@ def hello():
 
 @app.route("/version", methods=['GET'])
 def version():
-    return "Version: 3.0"
+    return "Version: 4.0"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)

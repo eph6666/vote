@@ -34,9 +34,9 @@ phases:
       - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       - kubectl get nodes
-      - kubectl apply -f ./k8s-specifications/
-      - kubectl apply -f ./k8s-specifications/mesh/
-      # - kubectl apply -f ./k8s-specifications/mesh-v2/
+      # - kubectl apply -f ./k8s-specifications/
+      # - kubectl apply -f ./k8s-specifications/mesh/
+      - kubectl apply -f ./k8s-specifications/mesh-v2/
       - printf '[{"name":"demo/result","imageUri":"%s"}]' $REPOSITORY_URI/result:$TAG > build.json
       - printf '[{"name":"demo/vote","imageUri":"%s"}]' $REPOSITORY_URI/vote:$TAG > build.json
       - printf '[{"name":"demo/worker","imageUri":"%s"}]' $REPOSITORY_URI/worker:$TAG > build.json
