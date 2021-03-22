@@ -6,7 +6,7 @@ A simple distributed application running across multiple Docker containers.
 Getting started
 ---------------
 
-Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Mac or Windows. [Docker Compose](https://docs.docker.com/compose) will be automatically installed. On Linux, make sure you have the latest version of [Compose](https://docs.docker.com/compose/install/). 
+Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Mac or Windows. [Docker Compose](https://docs.docker.com/compose) will be automatically installed. On Linux, make sure you have the latest version of [Compose](https://docs.docker.com/compose/install/).
 
 
 ## Linux Containers
@@ -77,6 +77,10 @@ deployment "worker" created
 ```
 
 The vote interface is then available on port 31000 on each host of the cluster, the result one is available on port 31001.
+
+
+Build and run with AWS EKS, CodePipeline and Appmesh
+-------------------------
 
 Architecture
 -----
